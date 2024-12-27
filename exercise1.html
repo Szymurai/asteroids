@@ -4,9 +4,39 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>This is an HTML canvas</title>
+    <style media="screen">
+      body {
+        text-align: center;
+        font-family: sans-serif;
+      }
+
+      canvas {
+        background-color: black;
+      }
+    </style>
   </head>
   <body>
     <h1>This is an HTML canvas</h1>
     <canvas id="asteroids" width="400" , height="400"></canvas>
+    <script>
+      var canvas = document.getElementById("asteroids");
+      var context = canvas.getContext("2d");
+      context.strokeStyle = "dimgrey";
+      context.fillStyle = "lightgrey";
+      context.lineWidth = 5;
+      context.rect(75, 50, canvas.width - 150, canvas.height - 100);
+
+      context.stroke();
+      context.fill();
+
+      context.font = "34px Arial";
+      context.fillStyle = "#FFAAAA";
+      context.lineWidth = 0.75;
+      context.strokeStyle = "#FF2222";
+      context.textAlign = "center";
+      let msg = "Hello Kordian!";
+      context.fillText(msg, canvas.width / 2, 100);
+      context.strokeText(msg, canvas.width / 2, 100);
+    </script>
   </body>
 </html>
