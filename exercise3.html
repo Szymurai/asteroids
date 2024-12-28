@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>More drawing to canvas</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="drawing.js"></script>
+  </head>
+  <body>
+    <h1>More drawing to canvas</h1>
+    <canvas id="asteroids" width="400" , height="400"></canvas>
+    <script>
+      var canvas = document.getElementById("asteroids");
+      var context = canvas.getContext("2d");
+
+      draw_grid(context);
+
+      context.beginPath();
+      context.strokeStyle = "#FFFFFF";
+      context.fillStyle = "#00FF00";
+      context.lineWidth = 2;
+      context.moveTo(50, 50);
+      context.lineTo(150, 250);
+      context.lineTo(250, 170);
+      context.stroke();
+    </script>
+  </body>
+</html>
