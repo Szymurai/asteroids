@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Drawing in HTML Canvas</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="drawing.js"></script>
+  </head>
+  <body>
+    <h1>Drawing a spaceship</h1>
+    <canvas id="asteroids" , width="800" , height="800"></canvas>
+    <script>
+      var context = document.getElementById("asteroids").getContext("2d");
+      let t = context.canvas.width / 20;
+      let r = Math.PI / 500;
+      draw_grid(context);
+      context.translate(0, t);
+
+      for (let i = 0; i <= 50; i++) {
+        context.rotate(i * r);
+        draw_ship(context, t, { guide: true, lineWidth: 1 });
+        context.translate(t, 0);
+      }
+    </script>
+  </body>
+</html>
