@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Drawing in HTML Canvas</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="drawing.js"></script>
+  </head>
+  <body>
+    <h1>Drawing a spaceship</h1>
+    <canvas id="asteroids" , width="800" , height="800"></canvas>
+    <script>
+      var context = document.getElementById("asteroids").getContext("2d");
+      context.lineWidth = 0.5;
+      context.strokeStyle = "white";
+      let xCoordinate = context.canvas.width * 0.9;
+      let yCoordinate = 0;
+      let radius = context.canvas.width * 0.1;
+      draw_grid(context);
+      //   draw_ship(context, 200, 200, 150, { guide: true });
+      //   draw_ship(context, 75, 75, 50, { stroke: "gold", fill: "purple" });
+      //   draw_ship(context, 275, 275, 50, { angle: 0.8 * Math.PI, guide: true });
+      for (let r = 0; r <= 0.5 * Math.PI; r += 0.05 * Math.PI) {
+        context.save();
+        context.rotate(r);
+        draw_ship(context, xCoordinate, yCoordinate, radius, { guide: true });
+        context.beginPath();
+        context.moveTo(0, 0);
+        context.lineTo(xCoordinate, 0);
+        context.stroke();
+        context.restore();
+      }
+    </script>
+  </body>
+</html>
