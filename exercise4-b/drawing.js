@@ -100,6 +100,7 @@ function draw_ship(ctx, radius, options) {
     ctx.lineTo(0, 0);
     ctx.stroke();
     ctx.beginPath();
+    // Pierwszy argumennt dokładnie reprezentuje pozycję (kropki) na osi x, jaki (punkt zakrzywienia) jest zaimplementowany w momencie rysowania krzywej.
     ctx.arc(radius * curve - radius, 0, radius / 50, 0, 2 * Math.PI);
     ctx.stroke();
   }
