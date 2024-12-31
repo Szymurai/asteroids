@@ -60,8 +60,15 @@ function draw_pacman(ctx, xCoordinate, yCoordinate, radius, open) {
 function draw_ship(ctx, radius, options) {
   options = options || {};
   let angle = (options.angle || 0.5 * Math.PI) / 2;
-  let curve = options.curve || 0.5;
+  let curve1;
+  if (!options.curve1 && options.curve1 !== 0) {
+    curve1 = options.curve1 || 0.25;
+  } else {
+    curve1 = options.curve1;
+  }
+  let curve2 = options.curve2 || 0.75;
   ctx.save();
+
   // Optionally draw a guide showing the collision radius
   if (options.guide) {
     ctx.strokeStyle = "white";
@@ -72,17 +79,23 @@ function draw_ship(ctx, radius, options) {
     ctx.stroke();
     ctx.fill();
   }
+  // Jak ma być rysowany statek.
   ctx.lineWidth = options.lineWidth || 2;
-  ctx.strokeStyle = options.stroke || "white";
+  ctx.strokeStyle = options.stroke || "#03A062"; // "white";
   ctx.fillStyle = options.fill || "black";
 
   // Draw the ship in three lines
   ctx.beginPath();
+  // Zaznaczamy dziób statku.
   ctx.moveTo(radius, 0);
-  ctx.lineTo(
-    Math.cos(Math.PI - angle) * radius,
-    Math.sin(Math.PI - angle) * radius
-  );
+  // Rysujemy pierwszą prostą krzywą kwadratową.
+  // ctx.lineTo(
+  // Zamieniamy współrzędne biegunowe na współrzędne kartezjańskie.
+  //   Math.cos(Math.PI - angle) * radius,
+  //   Math.sin(Math.PI - angle) * radius
+  // );
+  ctx.quadraticCurveTo();
+  console.log(curve);
   ctx.quadraticCurveTo(
     radius * curve - radius,
     0,
@@ -100,6 +113,7 @@ function draw_ship(ctx, radius, options) {
     ctx.lineTo(0, 0);
     ctx.stroke();
     ctx.beginPath();
+    ctx.strokeStyle = "red";
     // Pierwszy argumennt dokładnie reprezentuje pozycję (kropki) na osi x, jaki (punkt zakrzywienia) jest zaimplementowany w momencie rysowania krzywej.
     ctx.arc(radius * curve - radius, 0, radius / 50, 0, 2 * Math.PI);
     ctx.stroke();
