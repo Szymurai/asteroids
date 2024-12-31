@@ -35,3 +35,11 @@ Wówczas powinniśmy otrzymać wypadkową tych dwóch punktów w punkcie (xCoord
 Warto w tym miejscu zapamiętać, że `cosinus` odnosi się do osi x, a `sin` do osi y.
 
 ![Sine and cosine of an angle, Math.PI](D5g1.png)
+
+Chcąc narysować krzywą krawędzi statku, punkty kontrole domyślnie ustawione są w pozycji 45 stopni opisnaego okręgu.
+`angle` - domyślnie 45 stopni tj. `0.5 * Math.PI / 2`
+`Math.cos(angle) * radius * curve2`,
+Warto zwrócić uwagę, że `curve2` ustawiony na 1, rozciągnie krzywą maksymalnie do krawdzędzi opisanego okręgu. Natomiast `curve2` ustawiony na 0 ustawi punkt kontrolony bezpośrednio na danej osi, co wówczas spowoduje wklęśnięcie krzywej krawędzi statku.
+
+Fully configurable ship drawing function we
+can use in our game by simply importing our drawing.js library.

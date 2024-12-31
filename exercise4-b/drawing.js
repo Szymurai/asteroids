@@ -88,35 +88,82 @@ function draw_ship(ctx, radius, options) {
   ctx.beginPath();
   // Zaznaczamy dziób statku.
   ctx.moveTo(radius, 0);
-  // Rysujemy pierwszą prostą krzywą kwadratową.
+  // Rysujemy pierwszą prostą.
+
   // ctx.lineTo(
   // Zamieniamy współrzędne biegunowe na współrzędne kartezjańskie.
   //   Math.cos(Math.PI - angle) * radius,
   //   Math.sin(Math.PI - angle) * radius
   // );
-  ctx.quadraticCurveTo();
-  console.log(curve);
+
+  // Domyślnie, bez przekazania `angle`, w tym momencie mamy kąt wynosi: `0.5 Math.PI / 2`, tj. pierwszą ćwiartkę okręgu (w przedziale 45 stopni).
+
+  // Rysujemy pierwszą krzywą kwadratową.
+
+  // Na podstawie powyższych komentarzy, domyślnie punkty kontrolne będą na pozycji 45 stopni.
+
   ctx.quadraticCurveTo(
-    radius * curve - radius,
+    Math.cos(angle) * radius * curve2,
+    Math.sin(angle) * radius * curve2,
+    Math.cos(Math.PI - angle) * radius,
+    Math.sin(Math.PI - angle) * radius
+  );
+
+  ctx.quadraticCurveTo(
+    // radius * curve1 - radius,
+    -radius * curve1,
     0,
     Math.cos(Math.PI + angle) * radius,
     Math.sin(Math.PI + angle) * radius
   );
+
+  ctx.quadraticCurveTo(
+    Math.cos(-angle) * radius * curve2,
+    Math.sin(-angle) * radius * curve2,
+    radius,
+    0
+  );
   ctx.closePath();
   ctx.fill();
   ctx.stroke();
+  // Rysowanie punktów kontrolnych definiujących poziom zakrzywienia krzywych krawędzi statku.
   if (options.guide) {
     ctx.strokeStyle = "white";
     ctx.lineWidth = 0.5;
     ctx.beginPath();
+
+    ctx.moveTo(Math.cos(-angle) * radius, Math.sin(-angle) * radius);
+    ctx.lineTo(0, 0);
+    ctx.lineTo(Math.cos(angle) * radius, Math.sin(angle) * radius);
     ctx.moveTo(-radius, 0);
     ctx.lineTo(0, 0);
     ctx.stroke();
     ctx.beginPath();
-    ctx.strokeStyle = "red";
+    ctx.fillStyle = "red";
+    ctx.arc(
+      Math.cos(angle) * radius * curve2,
+      Math.sin(angle) * radius * curve2,
+      radius / 50,
+      0,
+      2 * Math.PI
+    );
+    // ctx.stroke();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(
+      Math.cos(-angle) * radius * curve2,
+      Math.sin(-angle) * radius * curve2,
+      radius / 50,
+      0,
+      2 * Math.PI
+    );
+    // ctx.stroke();
+    ctx.fill();
+    ctx.beginPath();
     // Pierwszy argumennt dokładnie reprezentuje pozycję (kropki) na osi x, jaki (punkt zakrzywienia) jest zaimplementowany w momencie rysowania krzywej.
-    ctx.arc(radius * curve - radius, 0, radius / 50, 0, 2 * Math.PI);
-    ctx.stroke();
+    ctx.arc(radius * curve1 - radius, 0, radius / 50, 0, 2 * Math.PI);
+    // ctx.stroke();
+    ctx.fill();
   }
   ctx.restore();
 }
