@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Animation</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="drawing.js"></script>
+  </head>
+  <body>
+    <h1>Animation</h1>
+    <canvas id="asteroids" , width="600" , height="600"></canvas>
+    <script>
+      var context = document.getElementById("asteroids").getContext("2d");
+      context.strokeStyle = "white";
+      context.lineWidth = 1.5;
+      var x = 0;
+      var y = context.canvas.height / 2;
+
+      function frame() {
+        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+        draw(context);
+        update();
+      }
+
+      function update() {
+        const random = Math.random();
+        x += 5;
+        y += random;
+        // context.canvas.height += random;
+      }
+
+      function draw(ctx) {
+        draw_grid(context);
+
+        ctx.beginPath();
+        ctx.arc(x, y, 40, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.stroke();
+      }
+
+      setInterval(frame, 1000.0 / 60.0);
+    </script>
+  </body>
+</html>

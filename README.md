@@ -56,3 +56,7 @@ of 0.1 would allow the radius to vary between 95% and 105% of the given value.
 Each asteroid have its own shape data.
 
 The shape is an array of numbers, but the numbers are assumed to vary between –0.5 and +0.5.
+
+### Animation
+
+When drawing ships and asteroids, we need data about their location, size, shape, and so on. This data will be used to translate and rotate the context so everything appears in the right place. To animate a scene, we update the data each frame and redraw the scene over and over as the data changes.
