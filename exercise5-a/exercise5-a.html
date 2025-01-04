@@ -13,25 +13,25 @@
     <script>
       var context = document.getElementById("asteroids").getContext("2d");
       draw_grid(context);
-      // context.save();
-      // context.translate(context.canvas.width / 2, context.canvas.height / 2);
-      // draw_asteroid(context, 300, 5, { guide: true });
-      // context.restore();
-      let segments = 15;
-      noise = 0.4;
-      for (let x = 0.1; x < 1; x += 0.2) {
-        for (let y = 0.1; y < 1; y += 0.2) {
-          // segments += 2;
+      segments = 15;
+      var shape = [];
+      for (var i = 0; i < segments; i++) {
+        shape.push(2 * (Math.random() - 0.5));
+      }
+      noise = 0;
+      for (let y = 0.1; y < 1; y += 0.2) {
+        for (let x = 0.1; x < 1; x += 0.2) {
           context.save();
           context.translate(
             context.canvas.width * x,
             context.canvas.height * y
           );
-          draw_asteroid(context, context.canvas.width / 12, segments, {
+          draw_asteroid(context, context.canvas.width / 16, shape, {
             guide: true,
             noise,
           });
           context.restore();
+          noise += 0.025;
         }
       }
     </script>

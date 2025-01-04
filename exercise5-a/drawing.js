@@ -168,19 +168,16 @@ function draw_ship(ctx, radius, options) {
   ctx.restore();
 }
 
-function draw_asteroid(ctx, radius, segments, options) {
+function draw_asteroid(ctx, radius, shape, options) {
+  sortedNumbers = [...shape].sort((a, b) => a - b);
   options = options || {};
   ctx.strokeStyle = options.stroke || "white";
   ctx.fillStyle = options.fill || "black";
   ctx.save();
   ctx.beginPath();
-  let randomNumbers = [];
-  for (let i = 0; i < segments; i++) {
-    ctx.rotate((2 * Math.PI) / segments);
-    // ctx.lineTo(radius, 0);
-    const randomNumber = Math.random();
-    randomNumbers = [...randomNumbers, randomNumber];
-    ctx.lineTo(radius + radius * options.noise * (randomNumber - 0.5), 0);
+  for (let i = 0; i < shape.length; i++) {
+    ctx.rotate((2 * Math.PI) / shape.length);
+    ctx.lineTo(radius + radius * options.noise * shape[i], 0);
   }
   ctx.closePath();
   ctx.fill();
@@ -192,27 +189,25 @@ function draw_asteroid(ctx, radius, segments, options) {
     ctx.arc(0, 0, radius, 0, 2 * Math.PI);
     ctx.stroke();
 
-    ctx.lineWidth = 0.3;
-    ctx.beginPath();
-    ctx.arc(
-      0,
-      0,
-      radius +
-        radius * options.noise * (randomNumbers.sort((a, b) => a - b)[0] - 0.5),
-      0,
-      2 * Math.PI
-    );
-    ctx.stroke();
-
+    ctx.strokeStyle = "red";
     ctx.lineWidth = 0.8;
     ctx.beginPath();
     ctx.arc(
       0,
       0,
-      radius +
-        radius *
-          options.noise *
-          (randomNumbers.sort((a, b) => a - b)[randomNumbers.length - 1] - 0.5),
+      radius + radius * options.noise * sortedNumbers[0],
+      0,
+      2 * Math.PI
+    );
+    ctx.stroke();
+
+    ctx.lineWidth = 0.2;
+    ctx.strokeStyle = "yellow";
+    ctx.beginPath();
+    ctx.arc(
+      0,
+      0,
+      radius + radius * options.noise * sortedNumbers[sortedNumbers.length - 1],
       0,
       2 * Math.PI
     );

@@ -43,3 +43,16 @@ Warto zwrócić uwagę, że `curve2` ustawiony na 1, rozciągnie krzywą maksyma
 
 Fully configurable ship drawing function we
 can use in our game by simply importing our drawing.js library.
+
+### Rysowanie asteroidów.
+
+Warto zwrócić uwagę, że w funkcji rysującej asteroidę `draw_asteroid()`, zaimplementowana została pewna doza losowości w momencie deklarowania punktu kolejnego segmentu, a dokładnie odległości w jakiej ma znaleźć się punkt kolejnego segmentu na prostej `(radius, 0)`. Dlatego modyfikujemy `xCoordinate` (maksymalnie wynosi radius) o zmienną losową.
+
+`options.noise` is multiplied by a random number between –0.5 and 0.5 to limit the
+effect of the randomization. For example, a noise value of 0.2 can lead to any
+radius between 90% and 110% of the original radius. Specifying a noise factor
+of 0.1 would allow the radius to vary between 95% and 105% of the given value.
+
+Each asteroid have its own shape data.
+
+The shape is an array of numbers, but the numbers are assumed to vary between –0.5 and +0.5.
