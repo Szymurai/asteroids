@@ -8,6 +8,8 @@
 
 ## Rysowanie statku
 
+`ctx.arc(centerX, centerY, radius, startAngle, endAngle);`
+
 Funkcja rysująca spaceship każdorazowo rysuje statek na płaszczyźnie współrzędnych z układem odniesienia w punkcie `(0, 0)` "xCoordinates, yCoordinates)".
 
 Wszystkie kształty (proste, okręgi) rysowane są w odniesieniu do tego punktu, a promień (`radius`) definiuje rozmiar statku. Funkcja używa współrzędnych biegunowych oraz krzywych kwadratowych (`quadraticCurveTo`) do stworzenia kształtu spaceship'a.

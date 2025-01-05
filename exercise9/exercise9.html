@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Animation</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="drawing.js"></script>
+    <script src="objects.js"></script>
+  </head>
+  <body>
+    <h1>Animation</h1>
+    <canvas id="pacman" , width="600" , height="600"></canvas>
+    <script>
+      const context = document.getElementById("pacman").getContext("2d");
+      const pacman = new PacMan(150, 150, 20, 120);
+      let ghosts = [
+        new Ghost(
+          Math.random() * context.canvas.width,
+          Math.random() * context.canvas.height,
+          20,
+          70,
+          "red"
+        ),
+        new Ghost(
+          Math.random() * context.canvas.width,
+          Math.random() * context.canvas.height,
+          20,
+          60,
+          "pink"
+        ),
+        new Ghost(
+          Math.random() * context.canvas.width,
+          Math.random() * context.canvas.height,
+          20,
+          50,
+          "cyan"
+        ),
+        new Ghost(
+          Math.random() * context.canvas.width,
+          Math.random() * context.canvas.height,
+          20,
+          40,
+          "orange"
+        ),
+      ];
+
+      let previous;
+      let elapsed;
+
+      function frame(timestamp) {
+        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+
+        if (!previous) previous = timestamp;
+        elapsed = timestamp - previous;
+        update(elapsed / 1000);
+        draw(context, true);
+        previous = timestamp;
+        window.requestAnimationFrame(frame);
+      }
+
+      function update(elapsed) {
+        pacman.update(elapsed, context.canvas.width, context.canvas.height);
+        ghosts.forEach(function (ghost) {
+          ghost.update(pacman, elapsed);
+        });
+      }
+
+      function draw(ctx, guide) {
+        if (guide) {
+          draw_grid(context);
+        }
+        pacman.draw(ctx);
+        ghosts.forEach(function (ghost) {
+          ghost.draw(context, guide);
+        });
+      }
+
+      window.requestAnimationFrame(frame);
+    </script>
+  </body>
+</html>
