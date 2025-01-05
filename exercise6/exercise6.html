@@ -14,8 +14,13 @@
       var context = document.getElementById("asteroids").getContext("2d");
       context.strokeStyle = "white";
       context.lineWidth = 1.5;
-      var x = 0;
-      var y = context.canvas.height / 2;
+      let x = 0;
+      let y = context.canvas.height / 5;
+      let radius = 20;
+      let xspeed = 1.5;
+      let yspeed = 0;
+      let gravity = 0.1;
+      let mouth = 0;
 
       function frame() {
         context.clearRect(0, 0, context.canvas.width, context.canvas.height);
@@ -24,19 +29,34 @@
       }
 
       function update() {
-        const random = Math.random();
-        x += 5;
-        y += random;
-        // context.canvas.height += random;
+        x += xspeed;
+        y += yspeed;
+        yspeed += gravity;
+
+        if (y >= context.canvas.height - radius) {
+          y = context.canvas.height - radius;
+          yspeed *= -0.6;
+          xspeed *= 0.95;
+        }
+
+        if (x <= 0 || x >= context.canvas.width) {
+          x = (x + context.canvas.width) % context.canvas.width;
+        }
+        mouth = Math.abs(Math.sin((6 * Math.PI * x) / context.canvas.width));
       }
 
       function draw(ctx) {
         draw_grid(context);
 
-        ctx.beginPath();
-        ctx.arc(x, y, 40, 0, 2 * Math.PI);
-        ctx.fill();
-        ctx.stroke();
+        // ctx.beginPath();
+        // ctx.arc(x, y, 40, 0, 2 * Math.PI);
+        // ctx.fill();
+        // ctx.stroke();
+
+        ctx.save();
+        ctx.translate(x, y);
+        draw_pacman(ctx, radius, mouth);
+        ctx.restore();
       }
 
       setInterval(frame, 1000.0 / 60.0);

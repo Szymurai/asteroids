@@ -60,3 +60,26 @@ The shape is an array of numbers, but the numbers are assumed to vary between �
 ### Animation
 
 When drawing ships and asteroids, we need data about their location, size, shape, and so on. This data will be used to translate and rotate the context so everything appears in the right place. To animate a scene, we update the data each frame and redraw the scene over and over as the data changes.
+
+Bouncing is simply switching the direction of travel
+
+The window.requestAnimationFrame API allows developers to specifically
+make a request of the browser to draw the next frame of an animation. It
+benefits from many optimizations, such as working at the refresh rate of
+the system and ensuring rendering is synchronized with the browser’s own
+repaint cycle. It also benefits from not rendering frames when the page is
+minimized or when another browser tab is selected. This saves processing
+power and battery life.
+
+Parametr `elapsed` jest obliczany na podstawie `timestamp` wywołania funkcji `frame` w ramach metody `window.requestAnimationFrame`. Za 1. razem elapsed = 0 ms. Wówczas obiekty renderowane są w domyślnie zdefiniowanych pozycjach.
+
+```javascript
+let x_speed = context.canvas.width * (Math.random() - 0.5);
+let y_speed = context.canvas.height * (Math.random() - 0.5);
+```
+
+Powyższe linie kodu definiują nam ruch obiektów w px/sekundę. Dlatego do funkcji `update()`, `elapsed` przekazujemy w sekundach tj. `elapsed/1000` zamiast w ms tj. `elapsed`.
+
+`angle = (angle + elapsed * rotation_speed) % (2 * Math.PI);`
+
+W kodzie powyżej definiujemy, o jaki dodatkowy kąt (dodatkowy, bo uwzględniamy poprzednią zmienną `angle`) obrócić obiekt. Zastosowanie % zapewnia, że kąt pozostaje w zakresie od 0 do `2 * Math.PI`. Ponieważ jeśli kąt będzie mniejszy niż ` 2 * Math.PI`, to zostanie zwrócony dany kąt. Natomiast jeśli kąt przekroczy wartość `2 * Math.PI`, to zostanie zwrócona reszta bez części całkowitych dokonanej operacji.
