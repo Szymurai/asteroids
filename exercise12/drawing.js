@@ -275,3 +275,12 @@ function draw_ghost(ctx, radius, options) {
   ctx.fill();
   ctx.restore();
 }
+
+function draw_projectile(ctx, radius, lifetime) {
+  ctx.save();
+  ctx.fillStyle = "rgb(100%, 100%, " + 100 * lifetime + "%)";
+  ctx.beginPath();
+  ctx.arc(0, 0, radius, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.restore();
+}

@@ -93,13 +93,17 @@ Asteroid.prototype.draw = function (ctx, guide) {
   ctx.restore();
 };
 
-function Ship(x, y, power) {
+function Ship(x, y, power, weapon_power) {
   this.super(x, y, 10, 20, 1.5 * Math.PI);
   this.thruster_power = power;
   this.steering_power = power / 20;
   this.right_thruster = false;
   this.left_thruster = false;
   this.thruster_on = false;
+  this.weapon_power = weapon_power || 200;
+  this.loaded = false;
+  this.weapon_reload_time = 0.25;
+  this.time_until_reloaded = this.weapon_reload_time;
 }
 extend(Ship, Mass);
 
@@ -114,13 +118,55 @@ Ship.prototype.draw = function (c, guide) {
   c.restore();
 };
 
-Ship.prototype.update = function (elapsed) {
+Ship.prototype.update = function (elapsed, c) {
   this.push(this.angle, this.thruster_on * this.thruster_power, elapsed);
   this.twist(
     (this.right_thruster - this.left_thruster) * this.steering_power,
     elapsed
   );
+  this.loaded = this.time_until_reloaded === 0;
+  if (!this.loaded) {
+    this.time_until_reloaded -= Math.min(elapsed, this.time_until_reloaded);
+  }
   Mass.prototype.update.apply(this, arguments);
+};
+
+Ship.prototype.projectile = function (elapsed) {
+  const p = new Projectile(
+    0.025,
+    1,
+    this.x + Math.cos(this.angle) * this.radius,
+    this.y + Math.sin(this.angle) * this.radius,
+    this.x_speed,
+    this.y_speed,
+    this.rotation_speed
+  );
+  p.push(this.angle, this.weapon_power, elapsed);
+  this.push(this.angle + Math.PI, this.weapon_power, elapsed);
+  this.time_until_reloaded = this.weapon_reload_time;
+  return p;
+};
+
+function Projectile(mass, lifetime, x, y, x_speed, y_speed, rotation_speed) {
+  const density = 0.001;
+  const radius = Math.sqrt(mass / density / Math.PI);
+  this.super(x, y, mass, radius, 0, x_speed, y_speed, rotation_speed);
+  this.lifetime = lifetime;
+  this.life = 1.0;
+}
+extend(Projectile, Mass);
+
+Projectile.prototype.update = function (elapsed, c) {
+  this.life -= elapsed / this.lifetime;
+  Mass.prototype.update.apply(this, arguments);
+};
+
+Projectile.prototype.draw = function (c, guide) {
+  c.save();
+  c.translate(this.x, this.y);
+  c.rotate(this.angle);
+  draw_projectile(c, this.radius, this.life, guide);
+  c.restore();
 };
 
 // PACMAN
