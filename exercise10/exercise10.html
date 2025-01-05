@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Animation</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="drawing.js"></script>
+    <script src="objects.js"></script>
+  </head>
+  <body>
+    <h1>Inheritance</h1>
+    <canvas id="asteroids" , width="800" , height="800"></canvas>
+    <script>
+      "use strict";
+      const context = document.getElementById("asteroids").getContext("2d");
+
+      const mass = new Mass(
+        context.canvas.width / 2,
+        context.canvas.height / 2,
+        10,
+        20,
+        0.25 * Math.PI
+      );
+
+      const asteroid = new Asteroid(
+        10000,
+        Math.random() * context.canvas.width,
+        Math.random() * context.canvas.height
+      );
+
+      asteroid.push(Math.random() * 2 * Math.PI, 2000, 60);
+      asteroid.twist((Math.random() - 0.5) * 500, 60);
+
+      const ship = new Ship(
+        Math.random() * context.canvas.width,
+        Math.random() * context.canvas.height
+      );
+
+      function draw(ctx, guide) {
+        if (guide) {
+          draw_grid(context);
+        }
+        // mass.draw(context);
+        asteroid.draw(context, true);
+        ship.draw(context, true);
+      }
+
+      function update(elapsed) {
+        mass.update(elapsed, context);
+        asteroid.update(elapsed, context);
+
+        if (Math.abs(ship.speed()) < 15) {
+          ship.angle += Math.PI * 2 * 0.01;
+        }
+
+        if (Math.abs(ship.speed()) > 100) {
+          ship.angle = ship.movement_angle() + Math.PI;
+        }
+
+        ship.push(ship.angle, 1000, elapsed);
+
+        ship.update(elapsed, context);
+      }
+
+      let previous;
+      let elapsed;
+
+      function frame(timestamp) {
+        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+
+        if (!previous) previous = timestamp;
+        elapsed = timestamp - previous;
+        update(elapsed / 1000);
+        draw(context, true);
+        previous = timestamp;
+        window.requestAnimationFrame(frame);
+      }
+
+      window.requestAnimationFrame(frame);
+    </script>
+  </body>
+</html>
