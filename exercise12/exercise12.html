@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Animation</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="drawing.js"></script>
+    <script src="objects.js"></script>
+  </head>
+  <body>
+    <h1>Inheritance</h1>
+    <canvas id="asteroids" , width="800" , height="800" tabindex="1"></canvas>
+    <script>
+      "use strict";
+      const context = document.getElementById("asteroids").getContext("2d");
+      let guide = true;
+      const asteroid = new Asteroid(
+        10000,
+        Math.random() * context.canvas.width,
+        Math.random() * context.canvas.height
+      );
+
+      asteroid.push(Math.random() * 2 * Math.PI, 2000, 60);
+      asteroid.twist((Math.random() - 0.5) * 500, 60);
+
+      const ship = new Ship(
+        Math.random() * context.canvas.width,
+        Math.random() * context.canvas.height,
+        1000
+      );
+
+      function draw(ctx, guide) {
+        if (guide) {
+          draw_grid(context);
+        }
+        asteroid.draw(context, guide);
+        ship.draw(context, guide);
+      }
+
+      function update(elapsed) {
+        asteroid.update(elapsed, context);
+        ship.update(elapsed, context);
+      }
+
+      let previous;
+      let elapsed;
+
+      function frame(timestamp) {
+        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+
+        if (!previous) previous = timestamp;
+        elapsed = timestamp - previous;
+        update(elapsed / 1000);
+        draw(context, guide);
+        previous = timestamp;
+        window.requestAnimationFrame(frame);
+      }
+
+      window.requestAnimationFrame(frame);
+
+      function key_handler(e, value) {
+        var nothing_handled = false;
+        switch (e.key || e.keyCode) {
+          case "ArrowUp":
+          case 38:
+            ship.thruster_on = value;
+            break;
+          case "ArrowLeft":
+            158;
+          case 37:
+            ship.left_thruster = value;
+            break;
+          case "ArrowRight":
+          case 39:
+            ship.right_thruster = value;
+            break;
+          case "g":
+          case 71:
+            if (value) guide = !guide;
+          default:
+            nothing_handled = true;
+        }
+        if (!nothing_handled) e.preventDefault();
+      }
+
+      context.canvas.addEventListener(
+        "keydown",
+        function (e) {
+          key_handler(e, true);
+        },
+        true
+      );
+      context.canvas.addEventListener(
+        "keyup",
+        function (e) {
+          key_handler(e, false);
+        },
+        true
+      );
+
+      context.canvas.focus();
+    </script>
+  </body>
+</html>
