@@ -8,6 +8,24 @@ const SpecyaGame = function (id) {
   this.asteroid_mass = 5000;
   this.asteroid_push = 500000;
 
+  this.mass_destroyed = 500;
+  this.score = 0;
+
+  this.health_indicator = new Indicator("health", 5, 5, 100, 10);
+
+  this.score_indicator = new NumberIndicator(
+    "score",
+    this.canvas.width - 10,
+    5
+  );
+
+  this.fps_indicator = new NumberIndicator(
+    "fps",
+    this.canvas.width - 10,
+    this.canvas.height - 15,
+    { digits: 2 }
+  );
+
   this.ship = new Ship(this.canvas.width / 2, this.canvas.height / 2, 100, 200);
 
   this.projectiles = [];
@@ -26,9 +44,9 @@ SpecyaGame.prototype.moving_asteroid = function (elapsed) {
 
 SpecyaGame.prototype.new_asteroid = function () {
   return new Asteroid(
+    this.asteroid_mass,
     this.canvas.width * Math.random(),
-    this.canvas.height * Math.random(),
-    this.asteroid_mass
+    this.canvas.height * Math.random()
   );
 };
 
@@ -39,6 +57,26 @@ SpecyaGame.prototype.push_asteroid = function (asteroid, elapsed) {
     (Math.random() - 0.5) * Math.PI * this.asteroid_push * 0.02,
     elapsed
   );
+};
+
+SpecyaGame.prototype.split_asteroid = function (asteroid, elapsed) {
+  console.log(asteroid.mass);
+  console.log(this.mass_destroyed);
+  asteroid.mass -= this.mass_destroyed;
+  this.score += this.mass_destroyed;
+  const split = 0.25 + 0.5 * Math.random();
+  const ch1 = asteroid.child(asteroid.mass * split);
+  const ch2 = asteroid.child(asteroid.mass * (1 - split));
+  [ch1, ch2].forEach(function (child) {
+    if (child.mass < this.mass_destroyed) {
+      this.score += child.mass;
+      console.log(child.mass);
+      console.log(this.mass_destroyed);
+    } else {
+      this.push_asteroid(child, elapsed);
+      this.asteroids.push(child);
+    }
+  }, this);
 };
 
 SpecyaGame.prototype.keyDown = function (e) {
@@ -84,6 +122,7 @@ SpecyaGame.prototype.key_handler = function (e, value) {
 SpecyaGame.prototype.frame = function (timestamp) {
   if (!this.previous) this.previous = timestamp;
   var elapsed = timestamp - this.previous;
+  this.fps = 1000 / elapsed;
   this.update(elapsed / 1000);
   this.draw();
   this.previous = timestamp;
@@ -103,6 +142,14 @@ SpecyaGame.prototype.update = function (elapsed) {
     p.update(elapsed, this.c);
     if (p.life <= 0) {
       projectiles.splice(i, 1);
+    } else {
+      this.asteroids.forEach(function (asteroid, j) {
+        if (collision(asteroid, p)) {
+          projectiles.splice(i, 1);
+          this.asteroids.splice(j, 1);
+          this.split_asteroid(asteroid, elapsed);
+        }
+      }, this);
     }
   }, this);
   if (this.ship.trigger && this.ship.loaded) {
@@ -113,21 +160,17 @@ SpecyaGame.prototype.update = function (elapsed) {
 SpecyaGame.prototype.draw = function () {
   this.c.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-  this.c.save();
-  this.c.font = "18px arial";
-  this.c.fillStyle = "white";
-  this.c.fillText(
-    "health: " + this.ship.health.toFixed(1),
-    10,
-    this.canvas.height - 10
-  );
-  this.c.restore();
-
   if (this.guide) {
     draw_grid(this.c);
     this.asteroids.forEach(function (asteroid) {
       draw_line(this.c, asteroid, this.ship);
+      if (this.projectiles.length > 0) {
+        this.projectiles.forEach((p) => {
+          draw_line(this.c, asteroid, p);
+        });
+      }
     }, this);
+    this.fps_indicator.draw(this.c, this.fps);
   }
   this.asteroids.forEach(function (asteroid) {
     asteroid.draw(this.c, this.guide);
@@ -136,6 +179,10 @@ SpecyaGame.prototype.draw = function () {
   this.projectiles.forEach(function (p) {
     p.draw(this.c);
   }, this);
+
+  this.health_indicator.draw(this.c, this.ship.health, this.ship.max_health);
+
+  this.score_indicator.draw(this.c, this.score);
 };
 
 function collision(obj1, obj2) {

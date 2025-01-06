@@ -93,6 +93,17 @@ Asteroid.prototype.draw = function (ctx, guide) {
   ctx.restore();
 };
 
+Asteroid.prototype.child = function (mass) {
+  return new Asteroid(
+    mass,
+    this.x,
+    this.y,
+    this.x_speed,
+    this.y_speed,
+    this.rotation_speed
+  );
+};
+
 function Ship(x, y, power, weapon_power) {
   this.super(x, y, 10, 15, 1.5 * Math.PI);
   this.thruster_power = power;
@@ -185,6 +196,52 @@ Projectile.prototype.draw = function (c, guide) {
   c.translate(this.x, this.y);
   c.rotate(this.angle);
   draw_projectile(c, this.radius, this.life, guide);
+  c.restore();
+};
+
+function Indicator(label, x, y, width, height) {
+  this.label = label + ": ";
+  (this.x = x), (this.y = y);
+  this.width = width;
+  this.height = height;
+}
+
+Indicator.prototype.draw = function (c, max, level) {
+  c.save();
+  c.strokeStyle = "white";
+  c.fillStyle = "white";
+  c.font = this.height + "pt Arial";
+  const offset = c.measureText(this.label).width;
+  c.fillText(this.label, this.x, this.y + this.height - 1);
+  c.beginPath();
+  c.rect(offset + this.x, this.y, this.width, this.height);
+  c.stroke();
+  c.beginPath();
+  c.rect(offset + this.x, this.y, this.width * (max / level), this.height);
+  c.fill();
+  c.restore();
+};
+
+function NumberIndicator(label, x, y, options) {
+  options = options || {};
+  this.label = label + ": ";
+  this.x = x;
+  this.y = y;
+  this.digits = options.digits || 0;
+  this.pt = options.pt || 10;
+  this.align = options.align || "end";
+}
+
+NumberIndicator.prototype.draw = function (c, value) {
+  c.save();
+  c.fillStyle = "white";
+  c.font = this.pt + "pt Arial";
+  c.textAlign = this.align;
+  c.fillText(
+    this.label + value.toFixed(this.digits),
+    this.x,
+    this.y + this.pt - 1
+  );
   c.restore();
 };
 
