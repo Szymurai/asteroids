@@ -85,3 +85,20 @@ Powyższe linie kodu definiują nam ruch obiektów w px/sekundę. Dlatego do fun
 `angle = (angle + elapsed * rotation_speed) % (2 * Math.PI);`
 
 W kodzie powyżej definiujemy, o jaki dodatkowy kąt (dodatkowy, bo uwzględniamy poprzednią zmienną `angle`) obrócić obiekt. Zastosowanie % zapewnia, że kąt pozostaje w zakresie od 0 do `2 * Math.PI`. Ponieważ jeśli kąt będzie mniejszy niż ` 2 * Math.PI`, to zostanie zwrócony dany kąt. Natomiast jeśli kąt przekroczy wartość `2 * Math.PI`, to zostanie zwrócona reszta bez części całkowitych dokonanej operacji.
+
+### Physics
+
+Will be added in second iteration.
+
+### Collision Detection
+
+We detect collisions between ship and asteroids for damage and between projectiles and asteroids for scoring points.
+
+We use a simple circle-to-circle collision detection.
+
+It’s very simple to calculate: first, you
+need to calculate the distance between the centers of the two circles. If that distance is less than the sum of the circle radius, then the circles are overlapping.
+
+We detect collisions between the circles that approximate the ship and the asteroids.
+
+When the circle around the ship contacts the circle around an asteroid, we’ll set a new compromised property on the ship. When the ship is in the compromised state, it loses health.
